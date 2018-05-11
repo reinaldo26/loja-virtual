@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://localhost/Projects/PHPZP/_Projetos/Loja_Virtual/index.php?q=$1 [QSA,L]
