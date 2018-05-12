@@ -1,7 +1,7 @@
 <?php
 class homeController extends controller 
 {
-	private $user;
+    private $user;
 
     public function __construct() 
     {
