@@ -18,23 +18,8 @@
 	<?php endforeach; ?>
 </div>
 
-
-
-
-<!--
-<div class="row">
-	<div class="col-sm-4">
-		<div class="product-item">
-			<?php //$this->loadView('product-item', []); ?>
-		</div>
-	</div>
-
-	<div class="col-sm-4">
-		<?php //$this->loadView('product-item', []); ?>
-	</div>	
-
-	<div class="col-sm-4">
-		<?php //$this->loadView('product-item', []); ?>
-	</div>		
+<div class="paginationArea">
+	<?php for($i=1; $i<=$numberPages; $i++): ?>
+		<div class="paginationItem page <?php echo ($currentPage==$i)?'pag_active':''; ?>"><a href="<?php echo BASE_URL; ?>?page=<?php echo $i; ?>"><?php echo $i; ?></a></div>
+	<?php endfor; ?>
 </div>
--->
