@@ -18,7 +18,7 @@
 			<img src="<?php echo BASE_URL; ?>media/products/<?php echo $images[0]['url']; ?>" width="100%" />
 		</div>
 
-		<div class="product-name"><?php echo $name; ?></div>
+		<div class="product-name"><?php echo utf8_encode($name); ?></div>
 
 		<div class="product-brand"><?php echo $brand_name; ?></div>
 
@@ -30,7 +30,7 @@
 			?>
 		</div>
 
-		<div class="product-price"><?php echo 'R$ '.number_format($price_from, 2, ',', '.'); ?></div>
+		<div class="product-price"><?php echo 'R$ '.number_format($price, 2, ',', '.'); ?></div>
 
 		<div style="clear: both;"></div>
 	</a>

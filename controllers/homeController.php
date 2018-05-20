@@ -13,6 +13,12 @@ class homeController extends controller
         $dados = array();
         
         $products = new Products();
+        $categories = new Categories();
+        $f = new Filters();
+        $filters = [];
+        if(!empty($_GET['filter']) && is_array($_GET['filter'])){
+            $filters = $_GET['filter'];
+        }
 
         $currentPage = 1;
         $offset = 0;
@@ -22,12 +28,14 @@ class homeController extends controller
             $currentPage = $_GET['page'];
         }
 
-        $offset = ($currentPage * $limit) - $limit; // (2 * 3) - 3 = 3
-
-        $dados['list'] = $products->getList($offset, $limit);
-        $dados['totalItens'] = $products->getTotal();
+        $offset = ($currentPage * $limit) - $limit;
+        $dados['filters'] = $f->getFilters($filters);
+        $dados['list'] = $products->getList($offset, $limit, $filters);
+        $dados['totalItens'] = $products->getTotal($filters);
         $dados['numberPages'] = ceil(($dados['totalItens'] / $limit));
         $dados['currentPage'] = $currentPage;
+        $dados['categories'] = $categories->getList();
+        $dados['filters_selected'] = $filters;
 
         $this->loadTemplate('home', $dados);
     }

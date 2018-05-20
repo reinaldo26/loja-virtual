@@ -6,6 +6,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/bootstrap.min.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery-ui.min.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery-ui.structure.min.css" type="text/css" />
+		<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery-ui.theme.min.css" type="text/css" />
 		<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css" type="text/css" />
 	</head>
 	<body>
@@ -19,7 +22,7 @@
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php $this->lang->get('LANGUAGE'); ?>
 						<span class="caret"></span></a>
-						<ul class="dropdown-menu">
+						<ul class="dropdown-menu menu-cat">
 							<li><a href="<?php echo BASE_URL; ?>lang/set/en">English</a></li>
 							<li><a href="<?php echo BASE_URL; ?>lang/set/pt-br">Português</a></li>
 						</ul>
@@ -72,12 +75,21 @@
 					        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php $this->lang->get('SELECTCATEGORY'); ?>
 					        <span class="caret"></span></a>
 					        <ul class="dropdown-menu">
-					          <li><a href="#">Page 1-1</a></li>
-					          <li><a href="#">Page 1-2</a></li>
-					          <li><a href="#">Page 1-3</a></li>
+					          <?php foreach($viewData['categories'] as $cat): ?>
+					          	<li><a href="<?php echo BASE_URL.'categories/enter/'.$cat['id']; ?>"><?php echo $cat['name']; ?></a></li>
+					          <?php 
+					          	if(count($cat['subs']) > 0){
+					          		$this->loadView('menu_subcategory', ['subs' => $cat['subs'], 'level' => 1]);
+					          	}
+					          	endforeach;
+					          ?>
 					        </ul>
 					      </li>
-						<li><a href="#">Categoria X</a></li>
+					      <?php if(isset($viewData['category_filter'])): ?>
+					      	<?php foreach($viewData['category_filter'] as $cf): ?>
+						<li><a href="<?php echo BASE_URL; ?>categories/enter/<?php echo $cf['id']; ?>"><?php echo $cf['name']; ?></a></li>
+					<?php endforeach; ?>
+					<?php endif; ?>
 					</ul>
 				</div>
 			</nav>
@@ -90,6 +102,114 @@
 				  		<h1><?php $this->lang->get('FILTER'); ?></h1>
 				  		<div class="filterarea">
 
+				  		<form method="GET">
+				  			<div class="filterbox">
+				  				<div class="filtertitle"><?php $this->lang->get('BRANDS'); ?></div>
+				  				<div class="filtercontent">
+				  					<?php foreach($viewData['filters']['brands'] as $bitem): ?>
+				  					<div class="filteritem">
+				  						<input type="checkbox" <?php echo (isset($viewData['filters_selected']['brand']) && in_array($bitem['id'], $viewData['filters_selected']['brand']))?'checked="checked"':''; ?> name="filter[brand][]" value="<?php echo $bitem['id']; ?>" id="filter_brand<?php echo $bitem['id']; ?>" /> 
+				  						<label for="filter_brand<?php echo $bitem['id']; ?>"><?php echo $bitem['name']; ?></label><span> (<?php echo $bitem['count']; ?>)</span>
+				  					</div>
+				  					<?php endforeach; ?>	
+				  				</div>
+				  			</div>
+
+				  			<div class="filterbox">
+				  				<div class="filtertitle"><?php $this->lang->get('PRICE'); ?></div>
+				  				<div class="filtercontent">
+				  					<input type="hidden" id="slider0" name="filter[slider0]" value="<?php echo $viewData['filters']['slider0']; ?>" />
+				  					<input type="hidden" id="slider1" name="filter[slider1]" value="<?php echo $viewData['filters']['slider1']; ?>" />
+				  					<input type="text" id="amount" readonly style="border:0;"/>				
+									<div id="slider-range"></div>
+				  				</div>
+				  			</div>
+
+				  			<div class="filterbox">
+				  				<div class="filtertitle"><?php $this->lang->get('RATING'); ?></div>
+				  				<div class="filtercontent">
+
+				  					<div class="filteritem">
+				  						<input type="checkbox" id="filter_star0" name="filter[star][]" value="0" <?php echo (isset($viewData['filters_selected']['star']) && in_array('0', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
+				  					 	<label for="filter_star0">
+				  					 		<span><?php $this->lang->get('NO_STAR'); ?></span>
+				  					 		<span>(<?php echo $viewData['filters']['stars']['0']; ?>)</span>
+				  					 	</label>
+				  					</div>
+
+				  					<div class="filteritem">
+				  						<input type="checkbox" id="filter_star1" name="filter[star][]" value="1" <?php echo (isset($viewData['filters_selected']['star']) && in_array('1', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
+				  					 	<label for="filter_star1">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<span>(<?php echo $viewData['filters']['stars']['1']; ?>)</span>
+				  					 	</label>
+				  					</div>
+				  					<div class="filteritem">
+				  						<input type="checkbox" id="filter_star2" name="filter[star][]" value="2" <?php echo (isset($viewData['filters_selected']['star']) && in_array('2', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
+				  					 	<label for="filter_star2">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<span>(<?php echo $viewData['filters']['stars']['2']; ?>)</span>
+				  					 	</label>
+				  					</div>
+				  					<div class="filteritem">
+				  						<input type="checkbox" id="filter_star3" name="filter[star][]" value="3" <?php echo (isset($viewData['filters_selected']['star']) && in_array('3', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
+				  					 	<label for="filter_star3">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<span>(<?php echo $viewData['filters']['stars']['3']; ?>)</span>
+				  					 	</label>
+				  					</div>
+				  					<div class="filteritem">
+				  						<input type="checkbox" id="filter_star4" name="filter[star][]" value="4" <?php echo (isset($viewData['filters_selected']['star']) && in_array('4', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
+				  					 	<label for="filter_star4">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<span>(<?php echo $viewData['filters']['stars']['4']; ?>)</span>
+				  					 	</label>
+				  					</div>
+				  					<div class="filteritem">
+				  						<input type="checkbox" id="filter_star5" name="filter[star][]" value="5" <?php echo (isset($viewData['filters_selected']['star']) && in_array('5', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
+				  					 	<label for="filter_star5">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
+				  					 		<span>(<?php echo $viewData['filters']['stars']['5']; ?>)</span>
+				  					 	</label>
+				  					</div>
+				  				</div>
+				  			</div>
+
+				  			<div class="filterbox">
+				  				<div class="filtertitle"><?php $this->lang->get('SALE'); ?></div>
+				  				<div class="filtercontent">
+				  					<div class="filteritem">
+				  						<input type="checkbox" id="filter_sale" name="filter[sale]" value="1" <?php echo (isset($viewData['filters_selected']['sale']) && $viewData['filters_selected']['sale'] == '1')?'checked="checked"':''; ?> />
+				  						<label for="filter_sale">Em Promoção</label>
+				  						<span>(<?php echo $viewData['filters']['sale']; ?>)</span>			
+				  					</div>
+				  				</div>
+				  			</div>
+
+				  			<div class="filterbox">
+				  				<div class="filtertitle"><?php $this->lang->get('OPTIONS'); ?></div>
+				  				<div class="filtercontent">
+				  					<?php foreach($viewData['filters']['options'] as $option): ?>
+				  						<strong><?php echo $option['name']; ?></strong><br/><br/>
+				  						<?php foreach($option['options'] as $op): ?>
+				  							<div class="filteritem">
+						  					<input type="checkbox" id="filter_options" value="<?php echo $op['value']; ?>" name="filter[options][]" <?php echo (isset($viewData['filters_selected']['options']) && in_array($op['value'], $viewData['filters_selected']['options']))?'checked="checked"':''; ?> />
+						  					<label for="filter_options<?php echo $op['id']; ?>"><?php echo $op['value']; ?></label>
+						  					<span>(<?php echo $op['count']; ?>)</span>			
+				  							</div>
+				  						<?php endforeach; ?>
+				  					<?php endforeach; ?>
+				  				</div>
+				  			</div>
+				  		</form>
 				  		</div>
 
 				  		<div class="widget">
@@ -209,8 +329,12 @@
 	    		</div>
 	    	</div>
 	    </footer>
-		<script type="text/javascript">var BASE_URL = '<?php echo BASE_URL; ?>';</script>
+		<script type="text/javascript">
+			var BASE_URL = '<?php echo BASE_URL; ?>';
+			var maxValue = '<?php echo $viewData['filters']['maxValue']; ?>';
+		</script>
 		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/jquery.min.js"></script>
+		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/script.js"></script>
 	</body>
