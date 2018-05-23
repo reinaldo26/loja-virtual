@@ -13,9 +13,12 @@ class categoriesController extends controller
 
     public function enter($id)
     {
-        $dados = [];
+        $store = new Store();
         $categories = new Categories();
         $products = new Products();
+        $f = new Filters();
+
+        $dados = $store->getTemplateData();
         $dados['category_name'] = $categories->getCategoryName($id);
 
         if(!empty($dados['category_name'])){
@@ -34,10 +37,10 @@ class categoriesController extends controller
             $dados['numberPages'] = ceil(($dados['totalItens'] / $limit));
             $dados['currentPage'] = $currentPage;
             $dados['id_category'] = $id;
-            $dados['categories'] = $categories->getList();
 
-            $f = new Filters();
             $dados['filters'] = $f->getFilters();
+            //$dados['filters_selected'] = $filters;
+            $dados['sidebar'] = true;
             $this->loadTemplate('categories', $dados);
         } else {
             header("Location: ".BASE_URL);

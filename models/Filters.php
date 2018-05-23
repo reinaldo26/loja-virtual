@@ -2,12 +2,13 @@
 
 class Filters extends model
 {
-	public function getFilters($filters)
+	public function getFilters($filters = [])
 	{
 		$products = new Products();
 		$brands = new Brands();
 
 		$array = [
+			'searchTerm' => '',
 			'brands' => [],
 			'slider0' => 0,
 			'slider1' => 0,
@@ -23,7 +24,11 @@ class Filters extends model
 		 	'sale' => 0, 
 		 	'options' => []];
 
-		$array['brands'] = $brands->getList();
+		if(isset($filters['searchTerm'])){
+			$array['searchTerm'] = $filters['searchTerm'];
+		}
+		
+		$array['brands'] = $brands->getList($filters);
 		$brand_products = $products->getListOfBrands($filters);
 
 		// Criando filtro de marcas

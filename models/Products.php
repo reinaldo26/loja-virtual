@@ -13,16 +13,23 @@ class Products extends model
 		return $total['total'];
 	}
 
-	public function getList($offset = 0, $limit = 3, $filters = [])
+	public function getList($offset = 0, $limit = 3, $filters = [], $random = false)
 	{
 		$array = [];
+		$orderBySQL = '';
+		if($random == true){
+			$orderBySQL = "ORDER BY RAND()";
+		}
+		if(!empty($filters['toprated'])){
+			$orderBySQL = "ORDER BY rating DESC";
+		}
 		$where = $this->buildWhere($filters);
 
 		$stmt = $this->conn->prepare("SELECT *, 
 		(select brands.name from brands where brands.id = products.id_brand) 
 		as brand_name, 
 		(select categories.name from categories where categories.id = products.id_category) 
-		as category_name FROM products WHERE ".implode(' AND ', $where)." LIMIT $offset, $limit"); 
+		as category_name FROM products WHERE ".implode(' AND ', $where)." ".$orderBySQL." LIMIT $offset, $limit"); 
 		
 		$this->bindWhere($filters, $stmt);
 
@@ -98,6 +105,9 @@ class Products extends model
 		if(!empty($filters['sale'])){
 			$where[] = "sale = '1'";
 		}
+		if(!empty($filters['featured'])){
+			$where[] = "featured = '1'";
+		}
 
 		if(!empty($filters['options'])){
 			$where[] = "id IN (select id_product from products_options where products_options.p_value IN ('".implode("','", $filters['options'])."'))";
@@ -108,6 +118,9 @@ class Products extends model
 		}
 		if(!empty($filters['slider1'])){
 			$where[] = "price <= :SLIDER1";
+		}
+		if(!empty($filters['searchTerm'])){
+			$where[] = "name LIKE :SEARCHTERM";
 		}
 
 		return $where;
@@ -124,6 +137,9 @@ class Products extends model
 		}
 		if(!empty($filters['slider1'])){
 			$stmt->bindParam(":SLIDER1", $filters['slider1']);
+		}
+		if(!empty($filters['searchTerm'])){
+			$stmt->bindValue(":SEARCHTERM", '%'.$filters['searchTerm'].'%');
 		}
 	}
 
@@ -197,6 +213,75 @@ class Products extends model
 			 $array[$ops['id_option']]['options'][] = ['id' => $ops['id_option'], 'value' => $ops['p_value'], 'count' => $ops['c']];
 			}
 		}
+		return $array;
+	}
+
+	public function getProductInfo($id)
+	{
+		$array = [];
+
+		if(!empty($id)){
+			$stmt = $this->conn->prepare("SELECT *, (select brands.name from brands where brands.id = 
+				products.id_brand) as brand_name FROM products WHERE id = :ID");
+			$stmt->bindParam(":ID", $id);
+			$stmt->execute();
+			if($stmt->rowCount() > 0){
+				$array = $stmt->fetch();
+			}
+		}
+
+		return $array;
+	}
+
+	public function getOptionsByProductId($id)
+	{
+		$options = [];
+		// pegando os nomes das opções
+		$stmt = $this->conn->prepare("SELECT options FROM products WHERE id = :ID");
+		$stmt->bindParam(":ID", $id);
+		$stmt->execute();
+		if($stmt->rowCount() > 0){
+			$options = $stmt->fetch();
+			$options = $options['options'];
+
+			if(!empty($options)){
+				$stmt = $this->conn->prepare("SELECT * FROM options WHERE id IN ($options)");
+				$stmt->execute();
+				$options = $stmt->fetchAll();
+			}	
+
+			// pegando os valores das opções
+			$stmt = $this->conn->prepare("SELECT * FROM products_options WHERE id_product = :ID");
+			$stmt->bindParam(":ID", $id);
+			$stmt->execute();
+			
+			$options_values = [];
+			if($stmt->rowCount() > 0){
+				foreach($stmt->fetchAll() as $op) {
+					$options_values[$op['id_option']] = $op['p_value'];
+				}
+			}
+
+			// Juntar os nomes das opções com os valores no array
+			if(!empty($options)){
+				foreach ($options as $ok => $op) {
+				if(isset($options_values[$op['id']])){
+					$options[$ok]['value'] = $options_values[$op['id']];
+				} else {
+					$options[$ok]['value'] = '';
+				}	
+			  }
+			}	
+		}
+
+		return $options;
+	}
+
+	public function getRates($id, $qt)
+	{
+		$array = [];
+		$rates = new Rates();
+		$array = $rates->getRates($id, $qt);
 		return $array;
 	}
 }

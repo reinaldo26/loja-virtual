@@ -42,11 +42,9 @@
 						<div class="head_email">contato@<span>loja2.com.br</span></div>
 						
 						<div class="search_area">
-							<form method="GET">
-								<input type="text" name="s" required placeholder="<?php $this->lang->get('SEARCHFORANITEM'); ?>" />
-								<select name="category">
-									<option value=""><?php $this->lang->get('ALLCATEGORIES'); ?></option>
-								</select>
+							<form method="GET" action="<?php echo BASE_URL; ?>busca">
+								<input type="text" name="s" value="<?php echo (!empty($viewData['searchTerm']))?$viewData['searchTerm']:''; ?>" required placeholder="<?php $this->lang->get('SEARCHFORANITEM'); ?>" />
+								
 								<input type="submit" value="" />
 						    </form>
 						</div>
@@ -97,130 +95,14 @@
 		<section>
 			<div class="container">
 				<div class="row">
+				  <?php if(isset($viewData['sidebar'])): ?>
 				  <div class="col-sm-3">
-				  	<aside>
-				  		<h1><?php $this->lang->get('FILTER'); ?></h1>
-				  		<div class="filterarea">
-
-				  		<form method="GET">
-				  			<div class="filterbox">
-				  				<div class="filtertitle"><?php $this->lang->get('BRANDS'); ?></div>
-				  				<div class="filtercontent">
-				  					<?php foreach($viewData['filters']['brands'] as $bitem): ?>
-				  					<div class="filteritem">
-				  						<input type="checkbox" <?php echo (isset($viewData['filters_selected']['brand']) && in_array($bitem['id'], $viewData['filters_selected']['brand']))?'checked="checked"':''; ?> name="filter[brand][]" value="<?php echo $bitem['id']; ?>" id="filter_brand<?php echo $bitem['id']; ?>" /> 
-				  						<label for="filter_brand<?php echo $bitem['id']; ?>"><?php echo $bitem['name']; ?></label><span> (<?php echo $bitem['count']; ?>)</span>
-				  					</div>
-				  					<?php endforeach; ?>	
-				  				</div>
-				  			</div>
-
-				  			<div class="filterbox">
-				  				<div class="filtertitle"><?php $this->lang->get('PRICE'); ?></div>
-				  				<div class="filtercontent">
-				  					<input type="hidden" id="slider0" name="filter[slider0]" value="<?php echo $viewData['filters']['slider0']; ?>" />
-				  					<input type="hidden" id="slider1" name="filter[slider1]" value="<?php echo $viewData['filters']['slider1']; ?>" />
-				  					<input type="text" id="amount" readonly style="border:0;"/>				
-									<div id="slider-range"></div>
-				  				</div>
-				  			</div>
-
-				  			<div class="filterbox">
-				  				<div class="filtertitle"><?php $this->lang->get('RATING'); ?></div>
-				  				<div class="filtercontent">
-
-				  					<div class="filteritem">
-				  						<input type="checkbox" id="filter_star0" name="filter[star][]" value="0" <?php echo (isset($viewData['filters_selected']['star']) && in_array('0', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
-				  					 	<label for="filter_star0">
-				  					 		<span><?php $this->lang->get('NO_STAR'); ?></span>
-				  					 		<span>(<?php echo $viewData['filters']['stars']['0']; ?>)</span>
-				  					 	</label>
-				  					</div>
-
-				  					<div class="filteritem">
-				  						<input type="checkbox" id="filter_star1" name="filter[star][]" value="1" <?php echo (isset($viewData['filters_selected']['star']) && in_array('1', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
-				  					 	<label for="filter_star1">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<span>(<?php echo $viewData['filters']['stars']['1']; ?>)</span>
-				  					 	</label>
-				  					</div>
-				  					<div class="filteritem">
-				  						<input type="checkbox" id="filter_star2" name="filter[star][]" value="2" <?php echo (isset($viewData['filters_selected']['star']) && in_array('2', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
-				  					 	<label for="filter_star2">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<span>(<?php echo $viewData['filters']['stars']['2']; ?>)</span>
-				  					 	</label>
-				  					</div>
-				  					<div class="filteritem">
-				  						<input type="checkbox" id="filter_star3" name="filter[star][]" value="3" <?php echo (isset($viewData['filters_selected']['star']) && in_array('3', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
-				  					 	<label for="filter_star3">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<span>(<?php echo $viewData['filters']['stars']['3']; ?>)</span>
-				  					 	</label>
-				  					</div>
-				  					<div class="filteritem">
-				  						<input type="checkbox" id="filter_star4" name="filter[star][]" value="4" <?php echo (isset($viewData['filters_selected']['star']) && in_array('4', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
-				  					 	<label for="filter_star4">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<span>(<?php echo $viewData['filters']['stars']['4']; ?>)</span>
-				  					 	</label>
-				  					</div>
-				  					<div class="filteritem">
-				  						<input type="checkbox" id="filter_star5" name="filter[star][]" value="5" <?php echo (isset($viewData['filters_selected']['star']) && in_array('5', $viewData['filters_selected']['star']))?'checked="checked"':''; ?> />
-				  					 	<label for="filter_star5">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<img src="<?php echo BASE_URL; ?>assets/images/star.png" border="0" height="14">
-				  					 		<span>(<?php echo $viewData['filters']['stars']['5']; ?>)</span>
-				  					 	</label>
-				  					</div>
-				  				</div>
-				  			</div>
-
-				  			<div class="filterbox">
-				  				<div class="filtertitle"><?php $this->lang->get('SALE'); ?></div>
-				  				<div class="filtercontent">
-				  					<div class="filteritem">
-				  						<input type="checkbox" id="filter_sale" name="filter[sale]" value="1" <?php echo (isset($viewData['filters_selected']['sale']) && $viewData['filters_selected']['sale'] == '1')?'checked="checked"':''; ?> />
-				  						<label for="filter_sale">Em Promoção</label>
-				  						<span>(<?php echo $viewData['filters']['sale']; ?>)</span>			
-				  					</div>
-				  				</div>
-				  			</div>
-
-				  			<div class="filterbox">
-				  				<div class="filtertitle"><?php $this->lang->get('OPTIONS'); ?></div>
-				  				<div class="filtercontent">
-				  					<?php foreach($viewData['filters']['options'] as $option): ?>
-				  						<strong><?php echo $option['name']; ?></strong><br/><br/>
-				  						<?php foreach($option['options'] as $op): ?>
-				  							<div class="filteritem">
-						  					<input type="checkbox" id="filter_options" value="<?php echo $op['value']; ?>" name="filter[options][]" <?php echo (isset($viewData['filters_selected']['options']) && in_array($op['value'], $viewData['filters_selected']['options']))?'checked="checked"':''; ?> />
-						  					<label for="filter_options<?php echo $op['id']; ?>"><?php echo $op['value']; ?></label>
-						  					<span>(<?php echo $op['count']; ?>)</span>			
-				  							</div>
-				  						<?php endforeach; ?>
-				  					<?php endforeach; ?>
-				  				</div>
-				  			</div>
-				  		</form>
-				  		</div>
-
-				  		<div class="widget">
-				  			<h1><?php $this->lang->get('FEATUREDPRODUCTS'); ?></h1>
-				  			<div class="widget_body">
-				  				...
-				  			</div>
-				  		</div>
-				  	</aside>
+				  	<?php $this->loadView('sidebar', ['viewData' => $viewData]); ?>
 				  </div>
 				  <div class="col-sm-9"><?php $this->loadViewInTemplate($viewName, $viewData); ?></div>
+				  <?php else: ?>
+				  	<div class="col-sm-12"><?php $this->loadViewInTemplate($viewName, $viewData); ?></div>
+				  <?php endif; ?>
 				</div>
 	    	</div>
 	    </section>
@@ -231,7 +113,7 @@
 				  	<div class="widget">
 			  			<h1><?php $this->lang->get('FEATUREDPRODUCTS'); ?></h1>
 			  			<div class="widget_body">
-			  				...
+			  				<?php $this->loadView('widget_view', ['list' => $viewData['widget_featured2']]); ?>
 			  			</div>
 			  		</div>
 				  </div>
@@ -239,7 +121,7 @@
 				  	<div class="widget">
 			  			<h1><?php $this->lang->get('ONSALEPRODUCTS'); ?></h1>
 			  			<div class="widget_body">
-			  				...
+			  				<?php $this->loadView('widget_view', ['list' => $viewData['widget_sale']]); ?>
 			  			</div>
 			  		</div>
 				  </div>
@@ -247,7 +129,7 @@
 				  	<div class="widget">
 			  			<h1><?php $this->lang->get('TOPRATEDPRODUCTS'); ?></h1>
 			  			<div class="widget_body">
-			  				...
+			  				<?php $this->loadView('widget_view', ['list' => $viewData['widget_toprated']]); ?>
 			  			</div>
 			  		</div>
 				  </div>
@@ -257,10 +139,18 @@
 	    		<div class="container">
 	    			<div class="row">
 						<div class="col-xs-12 col-sm-8 col-sm-offset-2 no-padding">
-							<form method="POST">
-                                <input class="subemail" name="email" placeholder="<?php $this->lang->get('SUBSCRIBETEXT'); ?>">
-                                <input type="submit" value="<?php $this->lang->get('SUBSCRIBEBUTTON'); ?>" />
-                            </form>
+
+						<!-- Begin MailChimp Signup Form -->
+						<form action="https://github.us18.list-manage.com/subscribe/post?u=060ddeeda88d45645e2bcf699&amp;id=13297cf97b" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"novalidate>
+
+							<input type="email" value="" name="EMAIL" class="required email subemail" id="mce-EMAIL" placeholder="<?php $this->lang->get('SUBSCRIBETEXT'); ?>" />
+
+						    <input type="hidden" name="b_060ddeeda88d45645e2bcf699_13297cf97b" tabindex="-1" value="">
+
+						    <input type="submit" value="<?php $this->lang->get('SUBSCRIBEBUTTON'); ?>" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+						</form>
+						<!--End mc_embed_signup-->
+
 						</div>
 					</div>
 	    		</div>

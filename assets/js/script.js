@@ -1,4 +1,5 @@
 $(function(){
+  //slider filter
 	$( "#slider-range" ).slider({
       range: true,
       min: 0,
@@ -21,4 +22,24 @@ $(function(){
     	$('.filterarea form').submit();
     });
 
+    //form cart
+    $('.addtocartform button').on('click', function(e){
+      e.preventDefault();
+      var qt = parseInt($('.addtocartqt').val());
+      var action = $(this).attr('data-action');
+      if(action == 'decrease'){
+        if(qt-1 >= 1){
+          qt = qt - 1;
+        }        
+      } else if(action == 'increase'){
+        qt = qt + 1;
+      }
+      $('.addtocartqt').val(qt);
+    });
+
+    //gallery
+    $('.photo_item').on('click', function(){
+      var url = $(this).find('img').attr('src');
+      $('.mainphoto').find('img').attr('src', url);
+    });
 });
