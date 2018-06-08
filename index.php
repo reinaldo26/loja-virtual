@@ -1,6 +1,7 @@
 <?php
 session_start();
-require 'config.php';
+require_once 'vendor/autoload.php';
+require_once 'config.php';
 
 spl_autoload_register(function ($class){
     if(file_exists('controllers/'.$class.'.php')) {

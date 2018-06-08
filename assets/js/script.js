@@ -1,5 +1,6 @@
 $(function(){
   //slider filter
+  if(typeof maxValue != 'undefined'){
 	$( "#slider-range" ).slider({
       range: true,
       min: 0,
@@ -21,6 +22,7 @@ $(function(){
     $('.filterarea').find('input').on('change', function(){
     	$('.filterarea form').submit();
     });
+  }
 
     //form cart
     $('.addtocartform button').on('click', function(e){
@@ -35,6 +37,7 @@ $(function(){
         qt = qt + 1;
       }
       $('.addtocartqt').val(qt);
+      $('input[name=qt_product]').val(qt);
     });
 
     //gallery
@@ -42,4 +45,5 @@ $(function(){
       var url = $(this).find('img').attr('src');
       $('.mainphoto').find('img').attr('src', url);
     });
+
 });

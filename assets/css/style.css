@@ -515,3 +515,49 @@ footer h3 {
 .p-reviews {
 	margin-top: 5px;
 }
+
+.decrease {
+	width: 25px;
+	height: 25px;
+	margin-right: 5px;
+}
+
+.increase {
+	width: 25px;
+	height: 25px;
+	margin-left: 2px;
+}
+
+.btn-payment {
+	background-color: #59B210;
+	border-radius: 5px;
+	padding: 10px;
+	color: #FFF;
+	border: 0;
+	font-size: 16px;
+}
+
+.btn-login {
+	margin-top: 9px;
+	border: 0;
+}
+
+.btn-mdclose {
+	margin-right: 400px;
+}
+
+.btn-vt {
+	margin-right: 20px;
+}
+
+.btn-register {
+	margin-left: 5px; 
+	margin-top: 9px;
+	border: 0;
+}
+
+.btn-name {
+	margin-top: 10px;
+	border: 0;
+	background-color: #FFF;
+}

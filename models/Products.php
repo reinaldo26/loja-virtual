@@ -284,4 +284,19 @@ class Products extends model
 		$array = $rates->getRates($id, $qt);
 		return $array;
 	}
+
+	public function getInfo($id)
+	{
+		$array = [];
+		$stmt = $this->conn->prepare("SELECT * FROM products WHERE id = :ID");
+		$stmt->bindParam(":ID", $id);
+		$stmt->execute();
+		if($stmt->rowCount() > 0){
+			$array = $stmt->fetch();
+			$images = current($this->getImagesByProductId($id));
+			$array['image'] = $images['url'];
+		}
+
+		return $array;
+	}
 }

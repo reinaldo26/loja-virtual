@@ -10,8 +10,12 @@
 		<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery-ui.structure.min.css" type="text/css" />
 		<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/jquery-ui.theme.min.css" type="text/css" />
 		<link rel="stylesheet" href="<?php echo BASE_URL; ?>assets/css/style.css" type="text/css" />
+		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/jquery.min.js"></script>
 	</head>
 	<body>
+		<?php 
+
+		?>
 		<nav class="navbar topnav">
 			<div class="container">
 				<ul class="nav navbar-nav">
@@ -27,10 +31,140 @@
 							<li><a href="<?php echo BASE_URL; ?>lang/set/pt-br">Português</a></li>
 						</ul>
 					</li>
-					<li><a href="<?php echo BASE_URL; ?>login"><?php $this->lang->get('LOGIN'); ?></a></li>
+					<li>
+					<?php if(!empty($_SESSION['user'])): ?>
+						<button class="btn-name"><?php echo $viewData['dataUser']['name']; ?></button>
+					<?php else: ?>
+						<button class="btn-login" data-toggle="modal" data-target=".modal-login"><?php $this->lang->get('LOGIN'); ?></button>
+					<?php endif; ?>
+					</li>
+					<li>
+					<?php if(!empty($_SESSION['user'])): ?>
+							<a href="<?php echo BASE_URL; ?>logout" class="">Logout</a>
+					<?php else: ?>
+						<button class="btn-register" type="button" data-toggle="modal" data-target=".modal-register">Register</button>
+					<?php endif; ?>
+					</li>
 				</ul>
 			</div>
 		</nav>
+
+		<!-- Modal login -->
+		<div class="modal modal-login fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+			    <div class="modal-content">
+				    <div class="modal-header">
+				        <h4 class="modal-title"><?php $this->lang->get('LOGIN'); ?></h4>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				    	</div>
+				    <div class="modal-body">
+				    	<form method="POST" action="<?php echo BASE_URL; ?>login/signIn">
+				    		<?php if(isset($_GET['error'])): ?>
+  							<div class="alert alert-danger">E-mail/senha inválidos</div>
+  							<?php endif; ?>
+
+				    		<div class="form-group">
+    							<label for="email">Email:</label>
+   						 		<input type="email" class="form-control" id="email" name="email" required="required"/>
+  							</div>
+
+  							<div class="form-group">
+    							<label for="password">Password:</label>
+   						 		<input type="text" class="form-control" id="password" name="password"/>
+  							</div>
+				    </div>
+
+				    <div class="modal-footer">			    	
+				       	<button class="btn-vt" type="button" data-dismiss="modal">Voltar</button>
+				 		<input type="submit" value="Sign In"/>
+				    </div>
+				</form>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- Modal Register -->
+			<div class="modal modal-register fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog" role="document">
+			    <div class="modal-content">
+				    <div class="modal-header">
+				        <h4 class="modal-title">Register</h4>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				    	</div>
+				    <div class="modal-body">
+				    	<form method="POST" action="<?php echo BASE_URL; ?>login/register">
+				    		<h6><b>Informações Pessoais</b></h6>
+				    		<div class="form-group">
+    							<label for="nome">Nome:</label>
+   						 		<input type="text" class="form-control" id="nome" name="nome"/>
+  							</div>
+
+				    		<div class="form-group">
+    							<label for="email">Email:</label>
+   						 		<input type="email" class="form-control" id="email" name="email"/>
+  							</div>
+
+  							<div class="form-group">
+    							<label for="password">Password:</label>
+   						 		<input type="text" class="form-control" id="password" name="password"/>
+  							</div>	
+
+  							<div class="form-group">
+    							<label for="cpf">CPF:</label>
+   						 		<input type="text" class="form-control" id="cpf" name="cpf"/>
+  							</div>
+
+  							<h6><b>Informações de Endereço</b></h6>
+  							<div class="form-group">
+    							<label for="rua">Rua:</label>
+   						 		<input type="text" class="form-control" id="rua" name="rua"/>
+  							</div>
+
+  							<div class="form-group">
+    							<label for="numero">Número</label>
+   						 		<input type="text" class="form-control" id="numero" name="numero"/>
+  							</div>
+
+  							<div class="form-group">
+    						   <label for="complemento">Complemento:</label>
+   						 	   <input type="text" class="form-control" id="complemento" name="complemento"/>
+  							</div>
+
+  							<div class="form-group">
+    							<label for="cep">Cep:</label>
+   						 		<input type="text" class="form-control" id="cep" name="cep"/>
+  							</div>
+
+  							<div class="form-group">
+    							<label for="bairro">Bairro:</label>
+   						 		<input type="text" class="form-control" id="bairro" name="bairro"/>
+  							</div>
+
+  							<div class="form-group">
+    							<label for="cidade">Cidade:</label>
+   						 		<input type="text" class="form-control" id="cidade" name="cidade"/>
+  							</div>
+
+  							<div class="form-group">
+    							<label for="estado">Estado:</label>
+   						 		<input type="text" class="form-control" id="estado" name="estado"/>
+  							</div>
+	
+				    </div>
+
+				    <div class="modal-footer">
+				       	<button class="btn-mdclose" type="button" data-dismiss="modal">Cancelar</button>
+				 		<input type="submit" value="Cadastrar"/>
+				    </div>
+				</form>
+			    </div>
+			  </div>
+			</div>
+
 		<header>
 			<div class="container">
 				<div class="row">
@@ -53,11 +187,11 @@
 						<a href="<?php echo BASE_URL; ?>cart">
 							<div class="cartarea">
 								<div class="carticon">
-									<div class="cartqt">9</div>
+									<div class="cartqt"><?php echo $viewData['cart_qt']; ?></div>
 								</div>
 								<div class="carttotal">
-									<?php $this->lang->get('CART'); ?>:<br/>
-									<span>R$ 999,99</span>
+									<?php $this->lang->get('CART'); ?><br/>
+									<span><?php echo number_format($viewData['cart_subtotal'], 2, ',', '.'); ?></span>
 								</div>
 							</div>
 						</a>
@@ -65,6 +199,7 @@
 				</div>
 			</div>
 		</header>
+
 		<div class="categoryarea">
 			<nav class="navbar">
 				<div class="container">
@@ -92,6 +227,7 @@
 				</div>
 			</nav>
 		</div>
+
 		<section>
 			<div class="container">
 				<div class="row">
@@ -106,6 +242,7 @@
 				</div>
 	    	</div>
 	    </section>
+
 	    <footer>
 	    	<div class="container">
 	    		<div class="row">
@@ -219,11 +356,13 @@
 	    		</div>
 	    	</div>
 	    </footer>
+
 		<script type="text/javascript">
 			var BASE_URL = '<?php echo BASE_URL; ?>';
+			<?php if(isset($viewData['filters'])): ?>
 			var maxValue = '<?php echo $viewData['filters']['maxValue']; ?>';
-		</script>
-		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/jquery.min.js"></script>
+			<?php endif; ?>
+		</script>	
 		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="<?php echo BASE_URL; ?>assets/js/script.js"></script>

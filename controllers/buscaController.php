@@ -1,8 +1,7 @@
 <?php
+
 class buscaController extends controller 
 {
-  private $user;
-
     public function __construct() 
     {
         parent::__construct();
@@ -14,11 +13,10 @@ class buscaController extends controller
         $products = new Products();
         $categories = new Categories();
 
-        $dados = $store->getTemlateData();
+        $dados = $store->getTemplateData();
         
         if (!empty($_GET['s'])) {
             $searchTerm = $_GET['s']; 
-            //$category = $_GET['category'];
         
             $f = new Filters();
             $filters = [];
@@ -28,7 +26,6 @@ class buscaController extends controller
             }
 
             $filters['searchTerm'] = $searchTerm;
-            //$filters['category'] = $category;
 
             $currentPage = 1;
             $offset = 0;
@@ -48,9 +45,9 @@ class buscaController extends controller
 
             $dados['filters_selected'] = $filters;
             $dados['searchTerm'] = $searchTerm;
-            //$dados['category'] = $category;
 
             $this->loadTemplate('busca', $dados);
+
         } else {
             header("Location: ".BASE_URL);
         }

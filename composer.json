@@ -1,0 +1,7 @@
+{
+    "require": {
+        "pagseguro/pagseguro-php-sdk": "^4.2",
+        "gerencianet/gerencianet-sdk-php": "^2.1",
+        "paypal/rest-api-sdk-php": "*"
+    }
+}
